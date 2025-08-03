@@ -1,5 +1,8 @@
 # TextToSQLV2
-Application Web pour Convertir un Texte vers une requête SQL 
+Application Web pour Convertir un Texte vers une requête SQL.<br> 
+Pour une mesure de sécurité on autoriser que les requêtes SELECT et de ne pas permettre les commandes de modification (INSERT, UPDATE, DELETE)
+Une Option encours d'amelioration (Creation droits d'acces, et integration NLP)
+
 <h2>Description & Architecture de l'application.</h2> 
 Application suivra l'architecture MVC (Model-View-Controller), qui sépare les données et le traitements
 pour rendre le code plus facile à gérer.
