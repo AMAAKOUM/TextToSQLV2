@@ -1,0 +1,91 @@
+﻿@*Fichier : Views/Home/index.cshtml*@
+@using System.Data;
+@model TextToSql2.Models.DataModel
+
+@{
+    ViewData["Title"] = "Text to SQL";
+}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - Text to SQL</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f4f7f6;
+            }
+        </style>
+    </head>
+    <body class="p-8 md:p-12 lg:p-16">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center" >Text To SQL </h1>
+        <p class="text-gray-600 mb-8 text-center">Saisie de votre demande en langage Natuel - Phrase Simple - </p>
+
+        <form asp-action="TranslateAndQuery" method="post" class="space-y-6">
+                <div class="relative">
+                    <input type="text"
+                           name="userText"
+                       class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 shadow-sm"
+                       placeholder="Exemple : 'afficher tous les clients' ou 'afficher les produits avec un prix supérieur à 50'"
+                           value="@Model.UserQuery"/>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        class="">
+                        OK
+                    </button>
+                </div>
+            </form>
+        @if (Model != null && !string.IsNullOrEmpty(Model.SqlQuery))
+        {
+            <div class="mt-10 p-6 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Requête SQL Générée: </h3>
+                <pre class="bg-gray-200 p-4 rounded-lg text-gray-700 overflow-x-auto whitespace-pre-wrap break-words"><code>@Model.SqlQuery</code></pre>
+            </div>
+            @if (Model.Results.Rows.Count > 0)
+            {
+                <div class="mt-8 overflow-x-auto rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Resultat Obtenus: </h3>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                @foreach (DataColumn column in Model.Results.Columns)
+                                {
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        @column.ColumnName
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach(DataRow row in Model.Results.Rows)
+                            {
+                                <tr>
+                                    @foreach(DataColumn column in Model.Results.Columns)
+                                    {
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            @row[column]
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }else
+            {
+                <div class="mt-8 p-4 text-center bg-yellow-100 text-yellow-800 rounded-lg shadow-inner">
+                    Aucun resultat trouvé pour cette requete
+                </div>
+            }
+
+        }
+
+        </div>
+
+    </body>
+</html>
